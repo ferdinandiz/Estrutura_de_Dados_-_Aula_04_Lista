@@ -17,6 +17,6 @@ public class Main {
         lista.removerInicio();
         lista.printLista();
 
-        System.out.println(lista.get(6));
+        System.out.println(lista.get(2));
     }
 }
