@@ -4,24 +4,27 @@ import com.aula.iClasse.Lista;
 
 import java.util.NoSuchElementException;
 
-public class ListaEncadeadaSimples<T> implements Lista<T> {
+public class ListaCircular<T> implements Lista<T> {
     private No<T> inicio;
     private No<T> fim;
     private Integer tamanho;
 
-    public ListaEncadeadaSimples() {
+    public ListaCircular(){
         this.inicio = null;
         this.fim = null;
-        this.tamanho = 0;
+        tamanho = 0;
     }
 
     @Override
     public void inserirInicio(T item) {
         No<T> novo = new No<>(item);
-        novo.setProx(inicio);
-        inicio = novo;
-        if (fim == null) {
-            fim = novo;
+        if(vazia()){
+            inicio = fim = novo;
+            fim.setProx(inicio);
+        } else {
+            novo.setProx(inicio);
+            inicio = novo;
+            fim.setProx(inicio);
         }
         tamanho++;
     }
@@ -29,9 +32,12 @@ public class ListaEncadeadaSimples<T> implements Lista<T> {
     @Override
     public void inserirFim(T item) {
         No<T> novo = new No<>(item);
-        if(vazia()) {
+        if(vazia()){
             inicio = fim = novo;
-        } else{
+            fim.setProx(inicio);
+        }
+        else {
+            novo.setProx(inicio);
             fim.setProx(novo);
             fim = novo;
         }
@@ -43,31 +49,28 @@ public class ListaEncadeadaSimples<T> implements Lista<T> {
         if(indice < 0 || indice >= tamanho){
             throw new IndexOutOfBoundsException("Indice inválido: "+indice+"!!");
         }
-        if( indice == 0) {
+        if(indice == 0) {
             inserirInicio(item);
-            return;
         }
-        if(indice == tamanho-1){
+        if(indice==tamanho-1) {
             inserirFim(item);
-            return;
         }
         No<T> anterior = noPosicao(indice);
-        No<T> novo = new No<>(item);
+        No<T> novo =  new No<>(item);
         novo.setProx(anterior.getProx());
         anterior.setProx(novo);
         tamanho++;
-
     }
 
     @Override
     public T removerFim() {
-        if(vazia()) throw new NoSuchElementException("Erro: Lista Vazia!");
+        if(vazia()) throw new NoSuchElementException("ERRO: Lista Vazia!");
+        T valor = fim.getDado();
         if(tamanho == 1){
             return removerInicio();
         }
         No<T> penultimo = noPosicao(tamanho-2);
-        T valor = fim.getDado();
-        penultimo.setProx(null);
+        penultimo.setProx(inicio);
         fim = penultimo;
         tamanho--;
         return valor;
@@ -75,43 +78,50 @@ public class ListaEncadeadaSimples<T> implements Lista<T> {
 
     @Override
     public T removerInicio() {
-        if(vazia()) throw new NoSuchElementException("Erro: Lista Vazia!");
+        if(vazia()) throw new NoSuchElementException("ERRO: Lista Vazia!");
         T valor = inicio.getDado();
-        inicio = inicio.getProx();
-        if(inicio == null) fim = null;
+        if(tamanho == 1){
+            inicio = fim = null;
+        }
+        else{
+            inicio = inicio.getProx();
+            fim.setProx(inicio);
+        }
         tamanho--;
         return valor;
     }
 
     @Override
     public T removerPosicao(Integer indice) {
-        if(vazia()) throw new NoSuchElementException("Erro: Lista Vazia!");
-        if(indice < 0 || indice >= tamanho) throw new IndexOutOfBoundsException("Erro: Índice "+indice+" inválido!");
+        if(vazia()) throw new NoSuchElementException("ERRO: Lista Vazia!");
+        if(indice < 0 || indice >= tamanho){
+            throw new IndexOutOfBoundsException("Indice inválido: "+indice+"!!");
+        }
         if(indice == 0) removerInicio();
         if(indice == tamanho-1) removerFim();
-
         No<T> anterior = noPosicao(indice-1);
-        No<T> aEliminar = anterior.getProx();
-        anterior.setProx(aEliminar.getProx());
+        No<T> alvo = anterior.getProx();
+        anterior.setProx(alvo.getProx());
+        T valor = alvo.getDado();
         tamanho--;
-        return aEliminar.getDado();
+        return valor;
     }
 
     @Override
     public T get(Integer indice) {
-        if(indice < 0 || indice >= tamanho) throw new IndexOutOfBoundsException("Erro: Índice "+indice+" inválido!");
+        if(indice < 0 || indice >= tamanho){
+            throw new IndexOutOfBoundsException("Indice inválido: "+indice+"!!");
+        }
         return noPosicao(indice).getDado();
     }
 
     @Override
     public T primeiro() {
-        if(vazia()) throw new NoSuchElementException("Erro: Lista Vazia!");
         return inicio.getDado();
     }
 
     @Override
     public T ultimo() {
-        if(vazia()) throw new NoSuchElementException("Erro: Lista Vazia!");
         return fim.getDado();
     }
 
@@ -125,31 +135,12 @@ public class ListaEncadeadaSimples<T> implements Lista<T> {
         return tamanho;
     }
 
-    public void printLista(){
-        if(vazia()){
-            System.out.println("** LISTA VAZIA **");
-            return;
-        }
-        No<T> atual = inicio;
-        StringBuilder contrutorString = new StringBuilder();
-        while (atual != null){
-            contrutorString.append(atual.getDado());
-            if(atual.getProx() != null){
-                contrutorString.append(" -> ");
-            }
-            atual = atual.getProx();
-        }
-        System.out.println(contrutorString);
-    }
-
     private No<T> noPosicao(Integer indice){
         No<T> atual = inicio;
-        for (int i=0; i<indice;i++){
+        for(int i =0 ;i<indice;i++){
             atual = atual.getProx();
         }
         return atual;
     }
-
-
 
 }
