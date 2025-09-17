@@ -1,6 +1,7 @@
 package com.aula.classe;
 
 import com.aula.iClasse.Lista;
+import com.aula.nodes.No;
 
 import java.util.NoSuchElementException;
 
@@ -141,6 +142,24 @@ public class ListaCircular<T> implements Lista<T> {
             atual = atual.getProx();
         }
         return atual;
+    }
+
+
+    public void printLista(){
+        if(vazia()){
+            System.out.println("** LISTA VAZIA **");
+            return;
+        }
+        No<T> atual = inicio;
+        StringBuilder contrutorString = new StringBuilder();
+        for (int i = 0; i < tamanho(); i++){
+            contrutorString.append(atual.getDado());
+            if(atual != fim){
+                contrutorString.append(" -> ");
+            }
+            atual = atual.getProx();
+        }
+        System.out.println(contrutorString);
     }
 
 }

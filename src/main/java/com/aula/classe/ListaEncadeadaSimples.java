@@ -1,6 +1,7 @@
 package com.aula.classe;
 
 import com.aula.iClasse.Lista;
+import com.aula.nodes.No;
 
 import java.util.NoSuchElementException;
 

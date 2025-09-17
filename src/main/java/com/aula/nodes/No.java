@@ -1,4 +1,4 @@
-package com.aula.classe;
+package com.aula.nodes;
 
 public class No<T> {
     private T dado;
