@@ -52,9 +52,11 @@ public class ListaCircular<T> implements Lista<T> {
         }
         if(indice == 0) {
             inserirInicio(item);
+            return;
         }
         if(indice==tamanho-1) {
             inserirFim(item);
+            return;
         }
         No<T> anterior = noPosicao(indice);
         No<T> novo =  new No<>(item);
